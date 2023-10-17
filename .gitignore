@@ -77,6 +77,10 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+*.ipynb
+
+# ML Model package file
+*.pkl
 
 # IPython
 profile_default/

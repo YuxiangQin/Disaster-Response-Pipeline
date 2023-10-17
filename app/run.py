@@ -80,10 +80,29 @@ def index():
             }
     }
 
+    # graph2: bar plot of number of tags in one message's distribution
+    bin_size = 1
+    graph_two = {
+        'data': [
+            Histogram(
+                x=data,
+                nbinsx=int((max(data) - min(data)) / bin_size) + 1
+            )
+        ],
 
+        'layout': {
+            'title': 'Number of Response Tags Distribution',
+            'xaxis': {
+                'title': "Number of Response Tags"
+            },
+            'yaxis': {
+                'title': "Frequency"
+            }
+        }
+    }
 
     graphs.append(graph_one)
-    
+    graphs.append(graph_two)
 
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]

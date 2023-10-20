@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
+    '''load data from input filepaths and return a pandas dataframe'''
     # load messages dataset
     messages = pd.read_csv(messages_filepath)
     # load categories dataset
@@ -14,6 +15,7 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    '''process necessary steps to clean data, return pandas dataframe'''
     # create a dataframe of the 36 individual category columns
     categories = df['categories'].str.split(';', expand=True)
     # use first row to extract a list of new column names for categories.
@@ -35,6 +37,7 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    '''save @df as @database_filename'''
     engine = create_engine(f"sqlite:///{database_filename}")
     df.to_sql('data', engine, index=False, if_exists='replace')
 
@@ -47,15 +50,15 @@ def main():
         print('Loading data...\n    MESSAGES: {}\n    CATEGORIES: {}'
               .format(messages_filepath, categories_filepath))
         df = load_data(messages_filepath, categories_filepath)
-        
+
         print('Cleaning data...')
         df = clean_data(df)
-        
+
         print('Saving data...\n    DATABASE: {}'.format(database_filepath))
         save_data(df, database_filepath)
-        
+
         print('Cleaned data saved to database!')
-    
+
     else:
         print('Please provide the filepaths of the messages and categories '\
               'datasets as the first and second argument respectively, as '\

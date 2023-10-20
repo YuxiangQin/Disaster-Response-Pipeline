@@ -24,6 +24,7 @@ from sklearn.model_selection import GridSearchCV
 import pickle
 
 def load_data(database_filepath):
+    '''Load data from input filepath and return X, Y and category_names'''
     engine = create_engine(f'sqlite:///{database_filepath}')
     df = pd.read_sql_table('data', engine.connect())
     df.dropna(subset=['related'], inplace=True)
@@ -33,6 +34,7 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    '''Tokenize input text'''
     text = text.lower()
     # remove punctuation characters
     text = re.sub(r'[^\w\s]', ' ', text)
@@ -46,6 +48,7 @@ def tokenize(text):
 
 
 def build_model():
+    '''Create and return a model object'''
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -62,6 +65,20 @@ def build_model():
 
 
 def evaluate_model(model, X_test, y_test, category_names):
+    '''
+    Evaluates the given machine learning model's performance on the test data and prints
+    evaluation metrics such as precision, recall, and F1-score for each category in the classification
+    task. It also provides a classification report for each category.
+
+    Args:
+        model (model): The trained machine learning model to be evaluated.
+        X_test (DataFrame): The feature matrix of the test data.
+        y_test (DataFrame): The true labels for the test data.
+        category_names (list): A list of category names for the classification task.
+
+    Returns:
+        None
+    '''
     y_pred = model.predict(X_test)
     reports = []
     precisions = []
@@ -82,6 +99,7 @@ def evaluate_model(model, X_test, y_test, category_names):
         # return reports, precisions, recalls, f1_scores
 
 def save_model(model, model_filepath):
+    '''Save the best estimator from a scikit-learn model to a specified file.'''
     with open(model_filepath, 'wb') as file:
         pickle.dump(model.best_estimator_, file) # only save best_estimator in GridSearchCV object
 

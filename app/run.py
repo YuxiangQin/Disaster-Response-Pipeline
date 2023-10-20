@@ -16,6 +16,7 @@ from sqlalchemy import create_engine
 app = Flask(__name__)
 
 def tokenize(text):
+    '''Tokenize and preprocess a given text'''
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -38,7 +39,12 @@ model = joblib.load("../models/classifier.pkl")
 @app.route('/')
 @app.route('/index')
 def index():
+    '''
+    Render the index webpage, displaying visualizations and receiving user input.
 
+    Returns:
+        str: The HTML content for the index webpage.
+    '''
     # extract data needed for visuals
     df.dropna(subset=['related'], inplace=True)
     Y = df.iloc[:,-36:]
@@ -115,6 +121,7 @@ def index():
 # web page that handles user query and displays model results
 @app.route('/go')
 def go():
+    '''Handle user query and display model results.'''
     # save user input in query
     query = request.args.get('query', '')
 
